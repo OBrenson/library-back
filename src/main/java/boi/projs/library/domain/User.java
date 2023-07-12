@@ -1,19 +1,26 @@
-package domain;
+package boi.projs.library.domain;
 
 import lombok.*;
+
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.Set;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
+@Entity
+@NoArgsConstructor
 public class User extends BaseEntity {
 
-    @NonNull
     private String login;
-    @NonNull
     private byte[] password;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Author> authors;
+
     @Builder
-    public User(Long id, @NonNull String login, @NonNull byte[] password) {
+    public User(Long id, String login, byte[] password) {
         super(id);
         this.login = login;
         this.password = password;

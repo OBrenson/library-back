@@ -1,18 +1,23 @@
-package domain;
+package boi.projs.library.domain;
 
 import lombok.*;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
+@Entity
+@NoArgsConstructor
+@Table(name="text_file")
 public class TextFile extends BaseEntity{
 
-    @NonNull
     private Long bookId;
     private byte[] content;
 
     @Builder
-    public TextFile(@NonNull Long id, @NonNull Long bookId, byte[] content) {
+    public TextFile(Long id, Long bookId, byte[] content) {
         super(id);
         this.bookId = bookId;
         this.content = content;
