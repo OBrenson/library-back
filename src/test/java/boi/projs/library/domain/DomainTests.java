@@ -2,6 +2,7 @@ package boi.projs.library.domain;
 
 import domain.Author;
 import domain.Book;
+import domain.TextFile;
 import domain.User;
 import org.junit.jupiter.api.Test;
 
@@ -44,6 +45,16 @@ public class DomainTests {
         assertEquals(fileId, book.getFileId());
         assertEquals(pageNum, book.getPage());
         assertEquals(String.format("domain.Book: %s %s",bookId, bookTitle), book.toString());
+    }
+
+    @Test
+    public void testTextFile() {
+        assertThrows(NullPointerException.class, () -> TextFile.builder().build());
+        TextFile textFile = TextFile.builder().id(fileId).bookId(bookId).content(text).build();
+        assertEquals(textFile.getId(), fileId);
+        assertEquals(textFile.getBookId(), bookId);
+        assertEquals(textFile.getContent(), text);
+        assertEquals(String.format("domain.TextFile: %s %s", fileId, bookId), textFile.toString());
     }
 
     private User createUser() {
