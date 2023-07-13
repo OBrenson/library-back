@@ -2,25 +2,28 @@ package boi.projs.library.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
+@Table(name="lib_user", indexes = @Index(name = "uniqueIndex", columnList = "login", unique = true))
 public class User extends BaseEntity {
 
+    @Column(unique = true, nullable = false)
     private String login;
+    @Column(nullable = false)
     private byte[] password;
 
     @OneToMany(mappedBy = "user")
     private Set<Author> authors;
 
     @Builder
-    public User(Long id, String login, byte[] password) {
+    public User(@NonNull UUID id, String login, byte[] password) {
         super(id);
         this.login = login;
         this.password = password;

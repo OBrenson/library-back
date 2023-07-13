@@ -1,8 +1,10 @@
 package boi.projs.library.domain;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,11 +15,10 @@ import javax.persistence.*;
 public abstract class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    protected Long id;
+    @Column(nullable = false)
+    protected UUID id;
 
     protected String getString(String clazzName, String field) {
-        return String.format("%s: %d %s", clazzName, id, field);
+        return String.format("%s: %s %s", clazzName, id, field);
     }
 }

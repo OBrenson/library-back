@@ -3,13 +3,15 @@ package boi.projs.library.domain;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static boi.projs.library.domain.Constants.*;
+import static boi.projs.library.Constants.*;
 
 public class DomainTests {
 
+    User user = createUser();
+    Author author = createAuthor(user);
+
     @Test
     public void testUser() {
-        User user = createUser();
         user.setId(userId);
         assertEquals(userId, user.getId());
         assertEquals(userName, user.getLogin());
@@ -19,8 +21,6 @@ public class DomainTests {
 
     @Test
     public void testAuthor() {
-        User user = createUser();
-        Author author = createAuthor(user);
         author.setId(authorId);
         assertEquals(author.getId(), authorId);
         assertEquals(author.getName(), authorName);
@@ -30,8 +30,6 @@ public class DomainTests {
 
     @Test
     public void testBook() {
-        User user = createUser();
-        Author author = createAuthor(user);
         Book book = Book.builder().title(bookTitle).author(author).fileId(fileId).page(pageNum).id(bookId).build();
         assertEquals(bookTitle, book.getTitle());
         assertEquals(author, book.getAuthor());
@@ -49,11 +47,4 @@ public class DomainTests {
         assertEquals(String.format("boi.projs.library.domain.TextFile: %s %s", fileId, bookId), textFile.toString());
     }
 
-    private User createUser() {
-        return User.builder().login(userName).password(userPass).id(userId).build();
-    }
-
-    private Author createAuthor(User user) {
-        return Author.builder().name(authorName).user(user).id(authorId).id(bookId).build();
-    }
 }

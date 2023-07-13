@@ -2,10 +2,8 @@ package boi.projs.library.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,16 +12,17 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 public class Book extends BaseEntity {
 
+    @Column(nullable = false)
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="author_id")
     private Author author;
-    private Long fileId;
+    private UUID fileId;
     private int page;
 
     @Builder
-    public Book(Long id, String title, Author author, Long fileId, int page) {
+    public Book(@NonNull UUID id, String title, Author author, UUID fileId, int page) {
         super(id);
         this.title = title;
         this.author = author;

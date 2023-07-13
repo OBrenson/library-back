@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,11 +14,11 @@ import javax.persistence.Table;
 @Table(name="text_file")
 public class TextFile extends BaseEntity{
 
-    private Long bookId;
+    private UUID bookId;
     private byte[] content;
 
     @Builder
-    public TextFile(Long id, Long bookId, byte[] content) {
+    public TextFile(@NonNull UUID id, UUID bookId, byte[] content) {
         super(id);
         this.bookId = bookId;
         this.content = content;
