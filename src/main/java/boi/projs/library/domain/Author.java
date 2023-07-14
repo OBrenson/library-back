@@ -12,14 +12,14 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-@Table(indexes = @Index(name = "author_unique_index", columnList = "user_id, name", unique = true))
+@Table(name = "author", indexes = @Index(name = "author_unique_index", columnList = "user_id, name", unique = true))
 public class Author extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     @OneToMany(mappedBy = "author")
