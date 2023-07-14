@@ -1,9 +1,11 @@
 package boi.projs.library.domain;
 
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
 @Getter
@@ -16,6 +18,7 @@ public abstract class BaseEntity {
 
     @Id
     @Column(nullable = false)
+    @Type(type = "org.hibernate.type.UUIDCharType")
     protected UUID id;
 
     protected String getString(String clazzName, String field) {

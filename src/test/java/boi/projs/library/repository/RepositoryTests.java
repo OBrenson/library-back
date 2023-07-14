@@ -59,7 +59,7 @@ public class RepositoryTests {
         sameAuthorWithAnotherUser.setId(UUID.randomUUID());
         authorRepository.saveAndFlush(sameAuthorWithAnotherUser);
 
-        List<Author> authors = authorRepository.findByUser_Id(user.getId());
+        List<Author> authors = authorRepository.findByUserId(user.getId());
         assertFalse(authors.isEmpty());
     }
 
