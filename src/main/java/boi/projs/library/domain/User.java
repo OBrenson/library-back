@@ -19,7 +19,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private byte[] password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Author> authors;
 
     @Builder

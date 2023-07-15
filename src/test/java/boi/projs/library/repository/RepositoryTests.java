@@ -61,6 +61,9 @@ public class RepositoryTests {
 
         List<Author> authors = authorRepository.findByUserId(user.getId());
         assertFalse(authors.isEmpty());
+
+        user = userRepository.findByLoginWithAuthors(userName);
+        assertFalse(user.getAuthors().isEmpty());
     }
 
     public <T extends BaseEntity>void testStandardFunctions(JpaRepository<T, UUID> repository, T entity) {
