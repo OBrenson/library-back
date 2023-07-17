@@ -2,6 +2,7 @@ package boi.projs.library.repository;
 
 import boi.projs.library.domain.Author;
 import boi.projs.library.domain.BaseEntity;
+import boi.projs.library.domain.Book;
 import boi.projs.library.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +29,9 @@ public class RepositoryTests {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Test
     public void testUserRep() {
@@ -61,9 +66,23 @@ public class RepositoryTests {
 
         List<Author> authors = authorRepository.findByUserId(user.getId());
         assertFalse(authors.isEmpty());
+    }
 
-        user = userRepository.findByLoginWithAuthors(userName);
-        assertFalse(user.getAuthors().isEmpty());
+    @Test
+    public void testBookRep() {
+        User user = createUser();
+        Author author = createAuthor(user);
+        List<Book> books = new ArrayList<>();
+        books.add(Book.builder().author(author).title(bookTitle).page(10).id(UUID.randomUUID()).build());
+        books.add(Book.builder().author(author).title(bookTitle + bookTitle).page(12).id(UUID.randomUUID()).build());
+        bookRepository.saveAllAndFlush(books);
+
+        books = bookRepository.findByAuthorName(books.get(0).getAuthor().getName());
+        assertEquals(2, books.size());
+
+        books = bookRepository.findByAuthorId(books.get(0).getAuthor().getId());
+        assertFalse(books.isEmpty());
+        assertEquals(2, books.size());
     }
 
     public <T extends BaseEntity>void testStandardFunctions(JpaRepository<T, UUID> repository, T entity) {

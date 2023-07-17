@@ -10,12 +10,13 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
+@Table(indexes = @Index(name = "book_unique", columnList = "author_id, title", unique = true))
 public class Book extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="author_id")
     private Author author;
     private UUID fileId;

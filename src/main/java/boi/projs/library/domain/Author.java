@@ -22,7 +22,7 @@ public class Author extends BaseEntity {
     @JoinColumn(name="user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private Set<Book> books;
 
     @Builder
