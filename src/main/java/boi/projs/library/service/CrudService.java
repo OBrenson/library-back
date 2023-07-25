@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@LoggableCrud
 public abstract class CrudService<T extends BaseEntity> {
 
     private JpaRepository<T, UUID> repository;
@@ -16,7 +17,6 @@ public abstract class CrudService<T extends BaseEntity> {
         this.repository = repository;
     }
 
-    @LoggableCrud
     public void save(T entity) {
         repository.save(entity);
     }

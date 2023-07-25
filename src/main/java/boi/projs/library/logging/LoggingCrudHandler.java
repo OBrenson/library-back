@@ -19,7 +19,7 @@ public class LoggingCrudHandler {
         this.crudLogger = crudLogger;
     }
 
-    @Before("@annotation(boi.projs.library.logging.LoggableCrud)")
+    @Before("@annotation(boi.projs.library.logging.LoggableCrud) || @within(boi.projs.library.logging.LoggableCrud)")
     public void beforeLogging(JoinPoint joinPoint) {
         crudLogger.info("{}#{}",joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName() + " started");
@@ -28,7 +28,7 @@ public class LoggingCrudHandler {
         }
     }
 
-    @After("@annotation(boi.projs.library.logging.LoggableCrud)")
+    @After("@annotation(boi.projs.library.logging.LoggableCrud) || @within(boi.projs.library.logging.LoggableCrud)")
     public void afterLogging(JoinPoint joinPoint) {
         crudLogger.info("{}#{}  successfully ended", joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName());

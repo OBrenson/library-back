@@ -17,8 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,21 +30,37 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Import(LibraryConfiguration.class)
+@EnableAspectJAutoProxy
 @SpringBootTest
 public class ServiceTest {
 
-    @Autowired
-    private UserCrudService baseService;
     @Autowired
     private Logger crudLogger;
 
     @MockBean
     private UserRepository userRepository;
+//    @MockBean
+//    private BookRepository bookRepository;
+//    @MockBean
+//    private AuthorRepository authorRepository;
+//    @MockBean
+//    private TextFileRepository textFileRepository;
 
     private MemoryAppender memoryAppender;
 
+    @Autowired
+    private UserCrudService userCrudService;
+//    @Autowired
+//    private AuthorCrudService authorCrudService;
+//    @Autowired
+//    private BookCrudService bookCrudService;
+//    @Autowired
+//    private TextFileCrudService textFileCrudService;
+
+    private List<CrudService<?>> crudServicesList = new ArrayList<>();
+
     @BeforeEach
-    public void setup() {
+    public void setup() throws IllegalAccessException {
         memoryAppender = new MemoryAppender();
         memoryAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
         crudLogger.setLevel(Level.DEBUG);
@@ -51,6 +69,8 @@ public class ServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         when(userRepository.findAll()).thenReturn(List.of(createUser()));
+
+        crudServicesList.add(userCrudService);
     }
 
     @Test
@@ -58,22 +78,22 @@ public class ServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(createUser()));
         User user = Constants.createUser();
 
-        baseService.save(user);
-        Optional<User> oUser = baseService.findById(userId);
+        userCrudService.save(user);
+        Optional<User> oUser = userCrudService.findById(userId);
         assertTrue(oUser.isPresent());
-        List<User> users = baseService.findAll();
+        List<User> users = userCrudService.findAll();
         assertEquals(1, users.size());
 
-        baseService.deleteById(Constants.userId);
+        userCrudService.deleteById(Constants.userId);
 
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, times(1)).findAll();
         verify(userRepository, times(1)).deleteById(userId);
 
         String loggerName = LoggingCrudHandler.class.getName();
-        assertEquals(3, memoryAppender.countEventsForLogger(loggerName));
-        assertEquals(2, memoryAppender.countEventsForLoggerByLevel(loggerName, Level.INFO));
-        assertEquals(1, memoryAppender.countEventsForLoggerByLevel(loggerName, Level.DEBUG));
+        assertEquals(11, memoryAppender.countEventsForLogger(loggerName));
+        assertEquals(8, memoryAppender.countEventsForLoggerByLevel(loggerName, Level.INFO));
+        assertEquals(3, memoryAppender.countEventsForLoggerByLevel(loggerName, Level.DEBUG));
     }
 
 }
