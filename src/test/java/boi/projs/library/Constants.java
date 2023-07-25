@@ -17,6 +17,8 @@ public abstract class Constants {
     public final static UUID fileId = UUID.fromString("0f14d0ab-9603-4a62-a9e4-5ed26688389b");
     public final static UUID bookId = UUID.fromString("0f14d0ab-9604-4a62-a9e4-5ed26688389b");
 
+    public static final String LOG_MSG = "";
+
     public final static byte[] text = {1,2,4,5,12,2};
 
     public static User createUser() {
