@@ -14,29 +14,16 @@ public class MemoryAppender extends ListAppender<ILoggingEvent> {
         this.list.clear();
     }
 
-    public boolean contains(String string, Level level) {
-        return this.list.stream()
-                .anyMatch(event -> event.toString().contains(string)
-                        && event.getLevel().equals(level));
+    public int countEventsForLoggerByLevel(String loggerName, Level level) {
+        return (int) this.list.stream()
+                .filter(event -> event.getLoggerName().contains(loggerName) && event.getLevel().equals(level))
+                .count();
     }
 
     public int countEventsForLogger(String loggerName) {
         return (int) this.list.stream()
                 .filter(event -> event.getLoggerName().contains(loggerName))
                 .count();
-    }
-
-    public List<ILoggingEvent> search(String string) {
-        return this.list.stream()
-                .filter(event -> event.toString().contains(string))
-                .collect(Collectors.toList());
-    }
-
-    public List<ILoggingEvent> search(String string, Level level) {
-        return this.list.stream()
-                .filter(event -> event.toString().contains(string)
-                        && event.getLevel().equals(level))
-                .collect(Collectors.toList());
     }
 
     public int getSize() {
