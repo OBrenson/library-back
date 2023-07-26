@@ -2,6 +2,8 @@ package boi.projs.library.service;
 
 import boi.projs.library.Constants;
 import boi.projs.library.configuration.LibraryConfiguration;
+import boi.projs.library.domain.Author;
+import boi.projs.library.domain.Book;
 import boi.projs.library.domain.User;
 import boi.projs.library.logging.LoggingCrudHandler;
 import boi.projs.library.repository.AuthorRepository;
@@ -11,8 +13,9 @@ import boi.projs.library.repository.UserRepository;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,7 @@ import static org.mockito.Mockito.*;
 @Import(LibraryConfiguration.class)
 @EnableAspectJAutoProxy
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ServiceTest {
 
     @Autowired
@@ -58,10 +62,10 @@ public class ServiceTest {
     @Autowired
     private TextFileCrudService textFileCrudService;
 
-    Map<CrudService, JpaRepository> serviceRepos = new HashMap<>();
+    Map<CrudService<?>, JpaRepository<?, UUID>> serviceRepos = new HashMap<>();
 
-    @BeforeEach
-    public void setup() throws IllegalAccessException {
+    @BeforeAll
+    public void setup() {
         memoryAppender = new MemoryAppender();
         memoryAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
         crudLogger.setLevel(Level.DEBUG);
@@ -76,7 +80,7 @@ public class ServiceTest {
 
     @Test
     public void testBaseService() {
-        for(Map.Entry<CrudService, JpaRepository> entry : serviceRepos.entrySet()) {
+        for(Map.Entry<CrudService<?>, JpaRepository<?, UUID>> entry : serviceRepos.entrySet()) {
             testServices(entry.getKey(), entry.getValue());
         }
 
@@ -86,9 +90,63 @@ public class ServiceTest {
         assertEquals(8, memoryAppender.countEventsForLoggerByLevel(loggerName, Level.DEBUG));
     }
 
-    public void testServices(CrudService crudService, JpaRepository repository) {
-        User user = Constants.createUser();
+    @Test
+    public void testAuthorService() {
+        Author author = createAuthor(createUser());
+        when(authorRepository.findByName(authorName)).thenReturn(author);
+        when(authorRepository.findByNameWithBooks(authorName)).thenReturn(List.of(author));
+        when(authorRepository.findByUserId(userId)).thenReturn(List.of(author));
+        when(authorRepository.findByUserLogin(userName)).thenReturn(List.of(author));
 
+        authorCrudService.findByName(authorName);
+        authorCrudService.findByNameWithBooks(authorName);
+        authorCrudService.findByUserId(userId);
+        authorCrudService.findByUserLogin(userName);
+
+        verify(authorRepository, times(1)).findByName(authorName);
+        verify(authorRepository, times(1)).findByNameWithBooks(authorName);
+        verify(authorRepository, times(1)).findByUserId(userId);
+        verify(authorRepository, times(1)).findByUserLogin(userName);
+    }
+
+    @Test
+    public void testBookService() {
+        Book book = Book.builder().author(createAuthor(createUser())).id(bookId).title(bookTitle).build();
+
+        when(bookRepository.findByAuthorId(authorId)).thenReturn(List.of(book));
+        when(bookRepository.findByAuthorName(authorName)).thenReturn(List.of(book));
+
+        bookCrudService.findByAuthorId(authorId);
+        bookCrudService.findByAuthorName(authorName);
+
+        verify(bookRepository, times(1)).findByAuthorId(authorId);
+        verify(bookRepository, times(1)).findByAuthorName(authorName);
+    }
+
+    @Test
+    public void testUserService() {
+        User user = createUser();
+
+        when(userRepository.findByLogin(user.getLogin())).thenReturn(user);
+        when(userRepository.findByLoginWithAuthors(user.getLogin())).thenReturn(user);
+
+        userCrudService.save(user);
+        userCrudService.findByLoginWithAuthors(user.getLogin());
+        userCrudService.findByLogin(user.getLogin());
+
+        verify(userRepository, times(1)).findByLogin(user.getLogin());
+        verify(userRepository, times(1)).findByLoginWithAuthors(user.getLogin());
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    public void testTextFileService() {
+        textFileCrudService.findByBookId(bookId);
+
+        verify(textFileRepository, times(1)).findByBookId(bookId);
+    }
+
+    private void testServices(CrudService<?> crudService, JpaRepository<?, UUID> repository) {
         crudService.findById(userId);
         crudService.findAll();
 

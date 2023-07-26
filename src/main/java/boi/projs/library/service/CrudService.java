@@ -11,7 +11,7 @@ import java.util.UUID;
 @LoggableCrud
 public abstract class CrudService<T extends BaseEntity> {
 
-    private JpaRepository<T, UUID> repository;
+    protected JpaRepository<T, UUID> repository;
 
     public CrudService(JpaRepository<T, UUID> repository) {
         this.repository = repository;

@@ -15,7 +15,7 @@ public interface AuthorRepository extends JpaRepository<Author, UUID> {
 
     List<Author> findByUserLogin(String login);
 
-    @Query("select a from Author a join fetch a.books where a.id = ?1")
-    List<Author> findByNameWithBooks();
+    @Query("select a from Author a join fetch a.books where a.name = ?1")
+    List<Author> findByNameWithBooks(String name);
 
 }

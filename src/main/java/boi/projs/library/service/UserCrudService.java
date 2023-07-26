@@ -14,4 +14,12 @@ public class UserCrudService extends CrudService<User> {
     public UserCrudService(UserRepository userRepository) {
         super(userRepository);
     }
+
+    public User findByLoginWithAuthors(String login) {
+        return ((UserRepository)repository).findByLoginWithAuthors(login);
+    }
+
+    public User findByLogin(String login) {
+        return ((UserRepository)repository).findByLogin(login);
+    }
 }

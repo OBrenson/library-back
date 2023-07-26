@@ -6,6 +6,8 @@ import boi.projs.library.repository.TextFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @LoggableCrud
 public class TextFileCrudService extends CrudService<TextFile> {
@@ -13,5 +15,9 @@ public class TextFileCrudService extends CrudService<TextFile> {
     @Autowired
     public TextFileCrudService(TextFileRepository textFileRepository) {
         super(textFileRepository);
+    }
+
+    public TextFile findByBookId(UUID bookId) {
+        return ((TextFileRepository)repository).findByBookId(bookId);
     }
 }
