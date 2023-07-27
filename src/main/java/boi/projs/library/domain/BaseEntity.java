@@ -6,15 +6,19 @@ import org.hibernate.annotations.Type;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class BaseEntity {
+
+    public BaseEntity(UUID id) {
+        this.id = Objects.requireNonNullElseGet(id, UUID::randomUUID);
+    }
 
     @Id
     @Column(nullable = false)

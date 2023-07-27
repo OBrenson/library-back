@@ -23,7 +23,7 @@ public class User extends BaseEntity {
     private Set<Author> authors;
 
     @Builder
-    public User(@NonNull UUID id, String login, byte[] password) {
+    public User(UUID id, String login, byte[] password) {
         super(id);
         this.login = login;
         this.password = password;

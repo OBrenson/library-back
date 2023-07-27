@@ -32,4 +32,8 @@ public abstract class CrudService<T extends BaseEntity> {
     public List<T> findAll() {
         return repository.findAll();
     }
+
+    public void saveAll(List<T> entities) {
+        repository.saveAll(entities);
+    }
 }

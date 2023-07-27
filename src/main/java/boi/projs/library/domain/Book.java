@@ -23,7 +23,7 @@ public class Book extends BaseEntity {
     private int page;
 
     @Builder
-    public Book(@NonNull UUID id, String title, Author author, UUID fileId, int page) {
+    public Book(UUID id, String title, Author author, UUID fileId, int page) {
         super(id);
         this.title = title;
         this.author = author;

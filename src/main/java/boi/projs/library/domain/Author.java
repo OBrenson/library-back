@@ -26,7 +26,7 @@ public class Author extends BaseEntity {
     private Set<Book> books;
 
     @Builder
-    public Author(@NonNull UUID id, String name, User user) {
+    public Author(UUID id, String name, User user) {
         super(id);
         this.name = name;
         this.user = user;

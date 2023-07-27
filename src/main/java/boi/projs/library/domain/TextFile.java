@@ -18,7 +18,7 @@ public class TextFile extends BaseEntity{
     private byte[] content;
 
     @Builder
-    public TextFile(@NonNull UUID id, UUID bookId, byte[] content) {
+    public TextFile(UUID id, UUID bookId, byte[] content) {
         super(id);
         this.bookId = bookId;
         this.content = content;
