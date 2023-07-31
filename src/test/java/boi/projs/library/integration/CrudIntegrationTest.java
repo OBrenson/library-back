@@ -43,7 +43,7 @@ public class CrudIntegrationTest {
     private TextFileCrudService textFileCrudService;
 
     @BeforeAll
-    private void setup() {
+    public void setup() {
         users = List.of(
                 User.builder().login("USERLOGIN1").password("pass".getBytes()).build(),
                 User.builder().login("USERLOGIN2").password("pass".getBytes()).build()
