@@ -222,6 +222,11 @@ public class CrudIntegrationTest {
                 });
     }
 
+    @Test
+    public void testDelete() {
+
+    }
+
     /**
      * @param crudService - сервис для работы с базой для сущности типа T.
      * @param check       - проверка равенства
