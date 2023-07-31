@@ -2,6 +2,7 @@ package boi.projs.library.domain;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
@@ -14,7 +15,9 @@ import java.util.UUID;
 @Table(name="text_file")
 public class TextFile extends BaseEntity{
 
+    @Column(nullable = false)
     private UUID bookId;
+    @Column(nullable = false)
     private byte[] content;
 
     @Builder
@@ -22,6 +25,16 @@ public class TextFile extends BaseEntity{
         super(id);
         this.bookId = bookId;
         this.content = content;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return checkEquals(o,
+                () -> o instanceof TextFile,
+                () -> id.equals(((TextFile)o).getId())
+                        && bookId.equals(((TextFile)o).getBookId())
+                        && content.length == ((TextFile)o).getContent().length
+        );
     }
 
     @Override

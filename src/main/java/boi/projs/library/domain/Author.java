@@ -40,7 +40,7 @@ public class Author extends BaseEntity {
     public boolean equals(Object o) {
         return checkEquals(o,
                 () -> o instanceof Author,
-                () -> id.equals(((Author) o).getId()) && name.equals(((Author) o).getName()) &&
-                        user.getId().equals(((Author) o).getUser().getId()));
+                () -> id.equals(((Author) o).getId()) && name.equals(((Author) o).getName())
+                        && user.getId().equals(((Author) o).getUser().getId()));
     }
 }
