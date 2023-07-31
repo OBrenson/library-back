@@ -93,17 +93,17 @@ public class ServiceTest {
     @Test
     public void testAuthorService() {
         Author author = createAuthor(createUser());
-        when(authorRepository.findByName(authorName)).thenReturn(author);
+        when(authorRepository.findByNameAndUser_Id(authorName, userId)).thenReturn(author);
         when(authorRepository.findByNameWithBooks(authorName)).thenReturn(List.of(author));
         when(authorRepository.findByUserId(userId)).thenReturn(List.of(author));
         when(authorRepository.findByUserLogin(userName)).thenReturn(List.of(author));
 
-        authorCrudService.findByName(authorName);
+        authorCrudService.findByNameAndUserId(authorName, userId);
         authorCrudService.findByNameWithBooks(authorName);
         authorCrudService.findByUserId(userId);
         authorCrudService.findByUserLogin(userName);
 
-        verify(authorRepository, times(1)).findByName(authorName);
+        verify(authorRepository, times(1)).findByNameAndUser_Id(authorName, userId);
         verify(authorRepository, times(1)).findByNameWithBooks(authorName);
         verify(authorRepository, times(1)).findByUserId(userId);
         verify(authorRepository, times(1)).findByUserLogin(userName);

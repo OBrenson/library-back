@@ -16,8 +16,8 @@ public class AuthorCrudService extends CrudService<Author> {
         super(authorRepository);
     }
 
-    public Author findByName(String name) {
-        return ((AuthorRepository)repository).findByName(name);
+    public Author findByNameAndUserId(String name, UUID id) {
+        return ((AuthorRepository)repository).findByNameAndUser_Id(name, id);
     }
 
     public List<Author> findByUserId(UUID id){

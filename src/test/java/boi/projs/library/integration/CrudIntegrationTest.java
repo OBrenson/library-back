@@ -77,7 +77,7 @@ public class CrudIntegrationTest {
     }
 
     @Test
-    public void testSelect() {
+    public void testUserSelect() {
         List<User> selectedUsers = userCrudService.findAll();
         assertEquals(users.size(), selectedUsers.size());
         for(User user : selectedUsers) {
@@ -87,5 +87,40 @@ public class CrudIntegrationTest {
         }
 
         User user = userCrudService.findByLoginWithAuthors(users.get(0).getLogin());
+        assertEquals(2, user.getAuthors().size());
+
+        user = userCrudService.findByLogin(users.get(1).getLogin());
+        assertEquals(users.get(1).getLogin(), user.getLogin());
+        assertArrayEquals(users.get(1).getPassword(), user.getPassword());
+    }
+
+    @Test
+    public void testAuthorUser() {
+        List<Author> selectedAuthors = authorCrudService.findAll();
+        assertEquals(authors.size(), selectedAuthors.size());
+        for(Author author : selectedAuthors) {
+            assertTrue(authors.contains(author));
+        }
+
+        Author author = authorCrudService.findByNameAndUserId(authors.get(0).getName(),
+                authors.get(0).getUser().getId());
+        assertEquals(authors.get(0), author);
+
+        selectedAuthors = authorCrudService.findByNameWithBooks(authors.get(0).getName());
+        assertEquals(1, selectedAuthors.size());
+        assertEquals(books.stream().filter(e -> e.getAuthor().equals(authors.get(0))).count(),
+                selectedAuthors.get(0).getBooks().size());
+
+        selectedAuthors = authorCrudService.findByUserId(users.get(0).getId());
+        assertEquals(2, selectedAuthors.size());
+        for(Author a : selectedAuthors) {
+            assertEquals(users.get(0).getId(), a.getUser().getId());
+        }
+
+        selectedAuthors = authorCrudService.findByUserLogin(users.get(0).getLogin());
+        assertEquals(2, selectedAuthors.size());
+        for(Author a : selectedAuthors) {
+            assertEquals(users.get(0).getId(), a.getUser().getId());
+        }
     }
 }

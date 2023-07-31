@@ -9,13 +9,13 @@ import java.util.UUID;
 
 public interface AuthorRepository extends JpaRepository<Author, UUID> {
 
-    Author findByName(String name);
+    Author findByNameAndUser_Id(String name, UUID id);
 
     List<Author> findByUserId(UUID id);
 
     List<Author> findByUserLogin(String login);
 
-    @Query("select a from Author a join fetch a.books where a.name = ?1")
+    @Query("select distinct a from Author a join fetch a.books where a.name = ?1")
     List<Author> findByNameWithBooks(String name);
 
 }

@@ -3,7 +3,7 @@ package boi.projs.library.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,7 +20,7 @@ public class User extends BaseEntity {
     private byte[] password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Author> authors;
+    private List<Author> authors;
 
     @Builder
     public User(UUID id, String login, byte[] password) {
@@ -32,5 +32,12 @@ public class User extends BaseEntity {
     @Override
     public String toString() {
         return getString(this.getClass().getName(), login);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return checkEquals(o,
+                () -> o instanceof User,
+                () -> id == ((User) o).getId() && login.equals(((User) o).getLogin()));
     }
 }
