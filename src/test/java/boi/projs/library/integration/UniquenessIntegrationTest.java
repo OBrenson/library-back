@@ -33,7 +33,7 @@ public class UniquenessIntegrationTest {
     private AuthorCrudService authorCrudService;
 
     @Test
-    public void testUserUniqueness() {
+    public void testUniqueness() {
         insert();
         User user1 =  User.builder().login("user1").password("pass1".getBytes()).build();
         assertThrows(DataIntegrityViolationException.class, () -> {

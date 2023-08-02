@@ -12,12 +12,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -209,7 +207,7 @@ public class CrudIntegrationTest {
 
     @Test
     public void testTextFileUpdate() {
-        final byte[] testContent = "asd123qwdasd".getBytes();
+        final byte[] testContent = "asd123".getBytes();
         load_change_save_return_old_save(textFileCrudService, files.get(0),
                 file -> assertArrayEquals(testContent, file.getContent()),
                 file -> {
@@ -223,8 +221,48 @@ public class CrudIntegrationTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testUserDelete() {
+        User user = users.get(0);
+        assertTrue(delete_load_check_is_null(userCrudService, user).isEmpty());
 
+        List<Author> removedAuthors = authors.stream().filter(e -> e.getUser().getId().equals(user.getId()))
+                .collect(Collectors.toList());
+
+        List<Book> removedBooks = books.stream().filter(e -> e.getAuthor().getUser().getId().equals(user.getId()))
+                .collect(Collectors.toList());
+
+        userCrudService.save(user);
+        authorCrudService.saveAll(removedAuthors);
+        bookCrudService.saveAll(removedBooks);
+    }
+
+    @Test
+    public void testAuthorDelete() {
+        Author author = authors.get(0);
+        assertTrue(delete_load_check_is_null(authorCrudService, authors.get(0)).isEmpty());
+        List<Book> removedBooks =
+                books.stream().filter(e -> e.getAuthor().getId().equals(author.getId()))
+                        .collect(Collectors.toList());
+        authorCrudService.save(author);
+        bookCrudService.saveAll(removedBooks);
+    }
+
+    @Test
+    public void testBookDelete() {
+        Book book = books.get(0);
+        assertTrue(delete_load_check_is_null(bookCrudService, book).isEmpty());
+        bookCrudService.save(book);
+    }
+
+    @Test
+    public void testTextFileDelete() {
+        assertTrue(delete_load_check_is_null(textFileCrudService, files.get(0)).isEmpty());
+        textFileCrudService.save(files.get(0));
+    }
+
+    private <T extends BaseEntity> Optional<T> delete_load_check_is_null(CrudService<T> crudService, T entity) {
+        crudService.deleteById(entity.getId());
+        return crudService.findById(entity.getId());
     }
 
     /**
@@ -239,10 +277,10 @@ public class CrudIntegrationTest {
             Consumer<T> check,
             Function<T, T> setNewValue,
             Function<T, T> setOldValue) {
-        T entity = crudService.findById(oldEntity.getId()).get();
+        T entity = crudService.findById(oldEntity.getId()).orElseThrow();
         entity = setNewValue.apply(entity);
         crudService.save(entity);
-        entity = crudService.findById(oldEntity.getId()).get();
+        entity = crudService.findById(oldEntity.getId()).orElseThrow();
         check.accept(entity);
         entity = setOldValue.apply(entity);
         crudService.save(entity);

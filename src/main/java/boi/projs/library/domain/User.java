@@ -19,7 +19,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private byte[] password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Author> authors;
 
     @Builder
